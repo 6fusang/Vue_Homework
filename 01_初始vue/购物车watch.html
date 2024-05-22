@@ -1,0 +1,89 @@
+<!--
+ * @Description: 购物车watch版
+ * @Author: 219970943张杨
+ * @Date: 2024-05-06 17:45:51
+ * @LastEditors: 219970943张杨
+ * @LastEditTime: 2024-05-18 21:53:18
+ * @FilePath: \Vue\vue_basic\01_初始vue\购物车watch.html
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购物车 计算属性 watch</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <template id="root"> 
+        <div>
+            <table border="1">
+                <tr>
+                    <th><input type="checkbox" v-model="checkAll">全选</th>
+                    <th>名称 </th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>小计</th>
+                </tr>
+                <tr v-for="p in products" :key="p.id">
+                    <td><input type="checkbox" v-model="p.isChecked"></td>
+                    <td>{{p.name}}</td>
+                    <td>{{p.price}}</td>
+                    <td>{{p.count}}</td>
+                    <td>{{singlePrice(p)}}</td>
+                </tr>
+            </table>
+            <p>总价：{{totalPrice}}</p>
+        </div>
+    </template>
+    <script>
+        const app = Vue.createApp({
+            template:"#root",
+            data(){
+                return{
+                    products:[
+                        {id:1,name:'洗衣机',price:3600,count:1,isChecked:true},
+                        {id:2,name:'电视剧',price:2600,count:1,isChecked:false},
+                        {id:3,name:'饮水机',price:500,count:1,isChecked:false},
+                    ],
+                    checkAll:false,
+                    totalPrice:0
+                }
+            },
+            methods:{
+                singlePrice(p){//合计价格
+                    return p.price * p.count
+                }
+            },
+            watch:{
+                products:{
+                    handler(nvalue,ovalue){
+                        let sum = 0
+                        this.checkAll = nvalue.every(p=>p.isChecked)
+                        nvalue.forEach(p => {
+                            if(p.isChecked){
+                                sum+=p.price*p.count
+                            }
+                        });
+                        this.totalPrice = sum
+                    },
+                    deep:true,
+                    immediate:true
+                },
+                checkAll(nvalue,ovalue){
+                    if (nvalue == true ||(nvalue == false && this.products.length == this.products.filter( (p)=> { return p.isChecked }).length))
+                    {
+                        this.products.forEach(p =>{
+                            p.isChecked = nvalue
+                        })
+                    }
+                }
+            }
+        }).mount('#app')
+
+    </script>
+</body>
+</html>

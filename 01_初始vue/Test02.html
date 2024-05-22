@@ -1,0 +1,72 @@
+<!--
+ * @Description: 实验2 产品手机模块
+ * @Author: 219970943张杨
+ * @Date: 2024-05-04 20:21:04
+ * @LastEditors: 219970943张杨
+ * @LastEditTime: 2024-05-19 19:35:05
+ * @FilePath: \Vue\vue_basic\01_初始vue\Test02.html
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手机 产品模块</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="../css/test02.css">
+</head>
+<!-- 219970943张杨 -->
+<body>
+    <div id="app"></div>
+    <template id="phone">
+        <div class="phonelist">
+            <div class="head">
+                <h2>手机</h2>
+                <div class="more">
+                    <a href="#">查看更多
+                      <p> > </p>  
+                    </a>
+                </div>
+            </div>
+            <div class="left">
+                <img src="../img/imgs/ad1.png" alt="">
+            </div>
+            <div class="right">
+                <ul v-for="(phone,pclass) in phones" :key="pid">
+                    <li>
+                        <img :src="phone.psrc" alt="">
+                        <p class="name">{{phone.pname}}</p>
+                        <p class="pdesc">{{phone.pdesc}}</p>
+                        <p class="price">{{phone.price}}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </template>
+
+
+</body>
+<script>
+    const app = Vue.createApp({
+        template: '#phone',
+        data() {
+            return {
+                phones: [
+                    { pid: 1, pname: "Redmi K50电竞版", pdesc: "全线拉满的冷血旗舰", price: "3299元起", psrc: "../img/imgs/phone5.png" },
+                    { pid: 2, pname: "Xiaomi 12 Pro", pdesc: "全新晓龙8 | 2K AMOLED屏幕", price: "4699元起", psrc: "../img/imgs/phone2.png" },
+                    { pid: 3, pname: "Xiaomi 12", pdesc: "全新晓龙8 | 5000万主摄", price: "3699元起", psrc: "../img/imgs/phone3.png" },
+                    { pid: 4, pname: "Xiaomi 12X", pdesc: "晓龙870 | 5000万主摄", price: "2999元起", psrc: "../img/imgs/phone4.png" },
+                    { pid: 5, pname: "Xiaomi 11 青春活力版", pdesc: "轻薄5G,内外皆出彩", price: "1899元起", psrc: "../img/imgs/phone1.png" },
+                    { pid: 6, pname: "Redmi Note 11Pro系列", pdesc: "三星AMOLED高刷频", price: "1799元起", psrc: "../img/imgs/phone6.png" },
+                    { pid: 7, pname: "Redmi Note 11 5G", pdesc: "5000mAh大电量", price: "1199元起", psrc: "../img/imgs/phone7.png" },
+                    { pid: 8, pname: "Redmi Note 11 4G", pdesc: "5000mAh大电量", price: "969元起", psrc: "../img/imgs/phone8.png" },
+
+                ]
+            }
+        }
+    })
+    app.mount('#app')
+</script>
+
+</html>

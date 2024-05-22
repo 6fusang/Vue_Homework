@@ -1,0 +1,111 @@
+<!--
+ * @Description: 购物车计算属性computed
+ * @Author: 219970943张杨
+ * @Date: 2024-05-06 10:35:32
+ * @LastEditors: 219970943张杨
+ * @LastEditTime: 2024-05-18 21:58:50
+ * @FilePath: \Vue\vue_basic\01_初始vue\购物车computed.html
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算属性</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <!-- 
+        实例，组件 app vm {{}}插值 
+        生命周期 created mounted
+        指令 v-html v-test 区别：前者显示html代码
+        单项 / 双向绑定 v-bind （缩写为冒号 ：）/ v-model == v-bind+v-on 语法糖 <input type = 'checkbook' v-model =xxx>
+        v-if 删除 v-else-if v-else
+        v-for 遍历value key index 遍历数组三个都生效 
+        ：key
+        自定义指令 全局注册app.directive（） 局部注册directives：
+        计算属性 computed ①对象 getter/setter ②函数
+        计算属性和方法 的差异：①用法不同 计算属性 没有小括号 ②计算属性可以赋值，函数不能赋值，传参 ③计算属性有缓存，函数没有缓存
+        计算属性（响应式原理）
+        原型链实现继承在Java里面
+        监听器：watch 属性：handler  deep深入监听 immediate 
+     -->
+     <div id="app"></div>
+     <template id="root">
+        <div>
+            <table border="1" style="text-align: left;">
+            <tr>
+                <th>
+                    <input type="checkbox" v-model="checkAll">全选
+                </th>
+                <th>名称 </th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>小计</th>
+            </tr>
+            <tr v-for="i in shops">
+                <td> 
+                   <input type="checkbox" v-model="i.isChecked">
+                </td>
+                <td>{{i.name}}</td>
+                <td>{{i.price}}</td>
+                <td>{{i.num}}</td>
+                <td>{{totalPrice(i)}}</td>
+            </tr>
+         </table>
+         <p>总价：{{sumPrice}}</p>
+        </div>
+        
+     </template> 
+     
+     <script>
+        const app = Vue.createApp({
+            template:'#root',
+            data(){
+                return{
+                    shops:[
+                    {name:'洗衣机',price:3600,num:1,isChecked:false},
+                    {name:'电视剧',price:2600,num:1,isChecked:true},
+                    {name:'饮水机',price:500,num:1,isChecked:false},
+                    ]
+                }
+            },
+            methods:{
+                // 合计
+                totalPrice(i){
+                    return i.price * i.num
+                }
+            },
+            computed:{//声明计算属性
+                //总计（计算属性）
+                sumPrice(){
+                    let sum = 0
+                    this.shops.forEach(i=>{
+                        if(i.isChecked){
+                            sum+=i.price * i.num
+                        }
+                        
+                    });
+                    return sum
+                },
+                // 全选
+                checkAll:{
+                    // 取值
+                    get(){
+                        return this.shops.every(i=>i.isChecked)
+                    },
+                    // 设置值，当单击全选按钮时候触发
+                    set(val){
+                        this.shops.forEach((i) => {
+                            i.isChecked = val
+                        });
+                    }
+                }
+            }
+        })
+        app.mount('#app')
+     </script>
+
+</body>
+</html>

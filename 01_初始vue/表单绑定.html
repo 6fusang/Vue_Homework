@@ -1,0 +1,126 @@
+<!--/* 
+    * @Author: 219970943zy  
+    * @Date: 2024-05-13 10:34:27  
+    * @Last Modified by:   219970943zy  
+    * @Last Modified time: 2024-05-13 10:34:27  
+    */-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表单绑定</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <template id="root">
+        <div>
+            <!-- v-model绑定使其更加灵活 -->
+            <p><input type="text" v-model="message"></p>
+            <p>
+                <textarea v-model="message" id="" cols="30" rows="10"></textarea>
+               <!-- 传统插值表达式 没有绑定好 -->
+                <textarea  cols="30" rows="10">{{message}}</textarea>
+            </p>
+            <p>
+                <!-- 可以帮助我们是否被选中 -->
+                <input type="checkbox" v-model="checked">是否被选中
+                <input type="checkbox" v-model="checked" true-value="yes" false-value="no">是否被选中
+                <!-- 绑定 是否 -->
+                <input type="checkbox" v-model="checked" :true-value="tvalue" false-value="fvalue">是否被选中
+
+            </p>
+            <p>
+                <!-- 多选框 -->
+                <input type="checkbox" name="sports" v-model="sports" value="football">足球
+                <input type="checkbox" name="sports" v-model="sports" value="basketball">篮球
+                <input type="checkbox" name="sports" v-model="sports" value="pingpong">乒乓球
+
+            </p>
+            <p>
+                <!-- 单选按钮 -->
+                <input type="radio" name="sex" v-model="sex" value="male">男
+                <input type="radio" name="sex" v-model="sex" value="female">女
+            </p>
+            <p>
+                <!-- 下拉框 -->
+                <select v-model="selectCity">
+                    <!-- 不是内容，属性为空，diasabled不可选 -->
+                    <option value="" disabled>请选择</option>
+                    <option value="CQ">重庆</option>
+                    <option value="SC">四川</option>
+                    <option value="SH">上海</option>
+                    <option value="SZ">深圳</option>
+                </select>
+            </p>
+            <p>
+                <!-- 下拉框，多选 -->
+                <select v-model="selectCities" multiple>
+                    <!-- 不是内容，属性为空，diasabled不可选 multiple -->
+                    <option value="" disabled  >请选择</option>
+                    <option value="CQ">重庆</option>
+                    <option value="SC">四川</option>
+                    <option value="SH">上海</option>
+                    <option value="SZ">深圳</option>
+                </select>
+            </p>
+            <p>
+                <select v-model="selectCity">
+                    <option value="" disabled>请选择</option>
+                    <option :value="c.value" v-for="c in  cities" :key="c.id">
+                        {{c.value}}
+                    </option>
+                </select>
+            </p>
+            <p>
+                <!-- v-model.lazy是对输入失去焦点后才进行改变 -->
+                <input type="text" v-model.lazy="message">
+                <!-- number修饰符 帮助数字符型转换成数字，非数字型字符串不转换-->
+                <input type="text" v-model.number="message1"><br>
+                <!-- 清楚两侧的空格 -->
+                <input type="text" v-model.trim="message1">
+            </p>
+            <p>
+                <!-- v-bind:单向绑定模型改视图改，v-on:视图改了模型改 -->
+               <!-- 输出框 触发事件 -->
+               语法糖：<input type="text" v-model="message"><br>
+               糖的本质：<input type="text" v-bind:value="message" v-on:input=""><br>
+               糖的本质2：<input type="text" :value="" @input=""><br>
+               <!-- v-model可以添加在任何地方 -->
+            </p>
+        </div>
+    </template>
+    <script>
+        const app = Vue.createApp({
+            template:"#root",
+            data(){
+                return{
+                    tvalue:'是',
+                    fvalue:'否',
+                    message1:'123asd',
+                    message:'hello',
+                    checked:false,
+                    // 多选框[数组] ：初始值给定，就默认选中 ；name、v-model绑定对象一致
+                    sports:['football','basketball'],
+                    // 写默认值：加初始值，不写就直接写空’‘
+                    sex:'female',
+                    // 下拉框
+                    selectCity:'',
+                    // 多选数组 下拉框
+                    selectCities:[],
+                    // 数组对象
+                    cities:[
+                        {id:1,value:'CQ',text:'重庆'},
+                        {id:2,value:'SC',text:'四川'},
+                        {id:3,value:'SC',text:'四川'},
+                        {id:4,value:'SC',text:'四川'},
+                        {id:5,value:'SC',text:'四川'},
+                    ]
+                }
+            },
+
+        }).mount("#app")
+    </script>
+</body>
+</html>

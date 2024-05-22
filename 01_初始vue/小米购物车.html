@@ -1,0 +1,170 @@
+<!--
+ * @Description: 小米购物车
+ * @Author: 219970943张杨
+ * @Date: 2024-05-15 09:30:26
+ * @LastEditors: 219970943张杨
+ * @LastEditTime: 2024-05-19 19:14:23
+ * @FilePath: \Vue\vue_basic\01_初始vue\小米购物车.html
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小米购物车</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="../css/test03.css">
+</head>
+
+<body>
+    <div id="app"></div>
+    <template id="root">
+        <div class="first">
+            <div class="header">
+                <div class="nav" :style="{'display':'flex'}">
+                    <div class="logo" >
+                        <img src="../img/img2/logo.png" alt="小米" :style="{'width':'130px','height':'90px'}">
+                    </div>
+                    <div :style="{'display':'flex','align-items':'center','justify-content':'center'}">
+                        <h2>我的购物车</h2>
+                        <span :style="{'color':'rgba(0, 0, 0, 0.326)'}">温馨提示：产品是否购买成功，以最终下单为准哦，请尽快结算</span>
+                    </div>
+                  
+                </div>
+            </div>
+            
+            <div class="content">
+                <div :style="{'height':'40px','padding-top':'20px','font-size':'18px','text-align':'center'}">
+                    <ul>
+                        <li >
+                            <input type="checkbox" v-model="checkAll" :style="{'margin':'0px 10px','margin-left':'30px'}">全选
+                        </li>
+                        <li>
+                        </li>
+                        <li :style="{'width':'300px','text-align':'left'}">商品名称</li>
+                        <li>单价</li>
+                        <li>数量</li>
+                        <li>小计</li>
+                        <li>操作</li>
+                    </ul>
+                </div>    
+                <div class="goods" >
+                    <ul v-for="i in goods" :key="i.id" :style="{'border-top':'2px solid rgba(10, 13, 37, 0.174)'}">
+                        <li :style="{'text-align':'center'}">
+                            <input type="checkbox" v-model="i.isChecked">
+                        </li>
+                    
+                        <li> 
+                            <img :src="i.src" class="goodsimg">
+                         </li> 
+                        <li :style="{'width':'300px','text-align':'left'}">
+                            <span>{{i.name}}</span>
+                        </li>
+                        <li>
+                            {{i.price}}元
+                        </li>
+                        <li>
+                            <div class="numDeal" >
+                                <button type="button" @click="reduce(i)">-</button>
+                                <span :value="i.num" style="text-align: center;">{{i.num}}</span>
+                                <button type="button" @click="add(i)">+</button>
+                            </div>
+                        </li>
+                        <li>
+                            <span :style="{'color':'orangered'}">{{totalPrice(i)}}元</span>
+                        </li>
+                        <li>
+                            <button class="detele" @click="confirmDelete(i)">×</button>
+                        </li>
+                    </ul>
+                </div>
+                <div :style="[{'margin-top':'20px','line-height':'45px','position':'relative'}]">
+                    <div class="again" :style="{'display':'inline-block','margin-left':'45px'}">继续购物</div>
+                    <div :style="[{'display':'inline-block'},{'margin-left':'20px'}]">已选择<span :style="[{'color':'orangered'},{'font-size':'24px'}]">{{sum}}</span>件</div>
+                    <div :style="[{'color':'orangered'},{'display':'inline-block','position':'absolute','right':'195px'}]" class="sumPrice">
+                        合计：<span :style="{'font-size':'30px'}">{{sumPrice}}</span>元
+                    </div>
+                    <div :style="{'display':'inline-block','position':'absolute','right':'150px'}">
+                        <button class="submit">去结算</button>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </template>   
+    <script>
+        Vue.createApp({
+            template:'#root',
+            data(){
+                return{
+                    goods:[
+                        {id:1,name:'小米手环7 夜跃黑',src:"../img/img2/goods1.png",price:'219',num:1,isChecked:true},
+                        {id:2,name:'Redmin电竞路由器AX5400黑色',src:"../img/img2/goods2.png",price:'549',num:1,isChecked:false},
+                        {id:3,name:'适配T300/T500/T500C 声波电动牙刷头',src:"../img/img2/goods3.png",price:'69',num:1,isChecked:false},
+                        {id:4,name:'米家声波电动牙刷T500 白色',src:"../img/img2/goods4.png",price:'179',num:1,isChecked:true},
+                    ]
+                }
+            },
+            methods:{
+                totalPrice(i){
+                    return i.price * i.num;
+                },
+                add(i) {
+                    i.num++;
+                },
+                reduce(i) {
+                    if(i.num > 1) {
+                        i.num--;
+                    }
+                },
+                confirmDelete(item) {
+                    if (confirm("您确认需要删除该商品吗？")) {
+                        this.handleDelete(item);
+                    }
+                },
+                handleDelete(item) {
+                    const index = this.goods.indexOf(item);
+                    if (index !== -1) {
+                        this.goods.splice(index, 1);
+                    }
+                }
+            },
+            computed:{
+                //总数量
+                sum(){
+                    let sum=0
+                    this.goods.forEach(i=>{
+                        if(i.isChecked){
+                            sum+=i.num
+                        }
+                    });
+                    return sum
+                },
+                //总计（计算属性）
+                sumPrice(){
+                    let sum = 0;
+                    this.goods.forEach(i=>{
+                        if(i.isChecked){
+                            sum+=i.price * i.num
+                        }
+                    });
+                    return sum
+                },
+                // 全选
+                checkAll:{
+                    // 取值
+                    get(){
+                        return this.goods.every(i=>i.isChecked)
+                    },
+                    // 设置值，当单击全选按钮时候触发
+                    set(val){
+                        this.goods.forEach((i) => {
+                            i.isChecked = val
+                        });
+                    }
+                }
+            }
+        }).mount('#app');
+    </script> 
+</body>
+</html>
